@@ -5,6 +5,8 @@ the file extension `.weeks`.
 
 ## Installation
 
+[vim-plug](https://github.com/junegunn/vim-plug)
+
 ```vim
 Plug 'tommyjl/weeks.nvim'
 ```
