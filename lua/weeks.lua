@@ -36,10 +36,16 @@ local function display_totals(totals)
 		table.insert(keys, key)
 	end
 	table.sort(keys)
+
+	local buf_lines = {}
 	for _, key in pairs(keys) do
 		local sum = totals[key]
-		print(key .. ": " .. sum)
+		table.insert(buf_lines, key .. ": " .. sum)
 	end
+
+	local buf = vim.api.nvim_create_buf(false, true)
+	vim.api.nvim_buf_set_lines(buf, 0, 1, false, buf_lines)
+	vim.api.nvim_set_current_buf(buf)
 end
 
 M.summary = function()
