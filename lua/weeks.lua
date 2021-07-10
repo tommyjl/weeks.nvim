@@ -11,20 +11,41 @@ local function parse_entry(line)
 	local a, z = pattern:match_str(line)
 	local date = string.sub(line, a, z)
 
+	local pattern = vim.regex([[\zs\d\{4\}\ze-W\d\{2\}-\d]])
+	local a, z = pattern:match_str(line)
+	local year = string.sub(date, a, z)
+
+	local pattern = vim.regex([[\d\{4\}-W\zs\d\{2\}\ze-\d]])
+	local a, z = pattern:match_str(line)
+	local week = string.sub(date, a + 1, z)
+
 	local pattern = vim.regex([[\d\+\.\?\d*h]])
 	local a, z = pattern:match_str(line)
 	local time = string.sub(line, a + 1, z - 1)
 
-	return { date = date, time = time }
+	return { date = date, year = year, week = week, time = time }
 end
 
-local function get_totals()
+local function get_daily_totals()
 	local totals = {}
 	local lines = vim.fn.getline(1, "$")
 	for _, line in pairs(lines) do
 		local entry = parse_entry(line)
 		if entry ~= nil then
 			totals[entry.date] = (totals[entry.date] or 0) + entry.time
+		end
+	end
+	return totals
+end
+
+local function get_weekly_totals()
+	local totals = {}
+	local lines = vim.fn.getline(1, "$")
+	for _, line in pairs(lines) do
+		local entry = parse_entry(line)
+		if entry ~= nil then
+			local key = entry.year .. "-W" .. entry.week
+			totals[key] = (totals[key] or 0) + entry.time
 		end
 	end
 	return totals
@@ -49,9 +70,22 @@ local function display_totals(totals)
 	vim.api.nvim_set_current_buf(buf)
 end
 
-M.summary = function()
-	local totals = get_totals()
+M.daily_summary = function()
+	local totals = get_daily_totals()
 	display_totals(totals)
+end
+
+M.weekly_summary = function()
+	local totals = get_weekly_totals()
+	display_totals(totals)
+end
+
+M.summary = function(summary_type)
+	if summary_type == "daily" then
+		M.daily_summary()
+	else
+		M.weekly_summary()
+	end
 end
 
 return M

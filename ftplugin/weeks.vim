@@ -3,4 +3,4 @@ if exists('g:weeks_loaded')
 endif
 let g:weeks_loaded = 1
 
-command! WeeksSummary lua require("weeks").summary()
+command! -nargs=? WeeksSummary lua require("weeks").summary("<args>")
