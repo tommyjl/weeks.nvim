@@ -43,6 +43,7 @@ local function display_totals(totals)
 		table.insert(buf_lines, key .. ": " .. sum)
 	end
 
+	vim.cmd("vsplit")
 	local buf = vim.api.nvim_create_buf(false, true)
 	vim.api.nvim_buf_set_lines(buf, 0, 1, false, buf_lines)
 	vim.api.nvim_set_current_buf(buf)
