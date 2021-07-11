@@ -65,6 +65,7 @@ local function display_totals(totals)
 	end
 
 	vim.cmd("vsplit")
+	vim.cmd("vertical resize 40")
 	local buf = vim.api.nvim_create_buf(false, true)
 	vim.api.nvim_buf_set_lines(buf, 0, 1, false, buf_lines)
 	vim.api.nvim_set_current_buf(buf)
