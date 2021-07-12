@@ -1,0 +1,34 @@
+weeks.txt
+
+================================================================================
+INTRODUCTION                                                               *weeks*
+
+The Weeks plugin adds support for a timetracking log format. It adds the
+`weeks` filetype with syntax highlighting and detects files with the `.weeks`
+file extension.
+
+The log format looks like this:
+>
+    // Lines can be comments like this
+
+    // Or log entries like this:
+    2021-W01-1 7.5h employer:development
+
+    // Entries can have comments appended at the end
+    2021-W01-1 7.5h employer:development // completed a new feature
+<
+Every entry is specified as a {date}, a {time} quantity, a {project}, and an
+optional {comment}.
+
+- {date}: ISO week date, e.g. `2021-W01-1`
+- {time}: number followed by 'h', e.g. `7.5h`
+- {project}: words separated by a colon for subdivision, e.g. an `employer`
+  project could be subdivided into `employer:admin` and `employer:development`
+- {comment}: if an entry is insufficiently described by only a project, the
+  comment can be used to add further detail, e.g. `// details`
+
+================================================================================
+COMMAND                                                            *weeks-command*
+
+:WeeksSummary {format}  Opens a summary window in a separate buffer. {format} can
+                        be either 'weekly' (default) or 'daily'.
