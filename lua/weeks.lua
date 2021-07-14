@@ -51,6 +51,19 @@ local function get_weekly_totals()
 	return totals
 end
 
+local function get_yearly_totals()
+	local totals = {}
+	local lines = vim.fn.getline(1, "$")
+	for _, line in pairs(lines) do
+		local entry = parse_entry(line)
+		if entry ~= nil then
+			local key = entry.year
+			totals[key] = (totals[key] or 0) + entry.time
+		end
+	end
+	return totals
+end
+
 local function display_totals(totals)
 	local keys = {}
 	for key in pairs(totals) do
@@ -81,9 +94,16 @@ M.weekly_summary = function()
 	display_totals(totals)
 end
 
+M.yearly_summary = function()
+	local totals = get_yearly_totals()
+	display_totals(totals)
+end
+
 M.summary = function(summary_type)
 	if summary_type == "d" or summary_type == "daily" then
 		M.daily_summary()
+	elseif summary_type == "y" or summary_type == "yearly" then
+		M.yearly_summary()
 	else
 		M.weekly_summary()
 	end
