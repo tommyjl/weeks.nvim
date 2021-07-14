@@ -82,7 +82,7 @@ M.weekly_summary = function()
 end
 
 M.summary = function(summary_type)
-	if summary_type == "daily" then
+	if summary_type == "d" or summary_type == "daily" then
 		M.daily_summary()
 	else
 		M.weekly_summary()
