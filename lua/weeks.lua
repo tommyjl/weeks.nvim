@@ -26,42 +26,35 @@ local function parse_entry(line)
 	return { date = date, year = year, week = week, time = time }
 end
 
-local function get_daily_totals()
+local function get_totals(key_fn)
 	local totals = {}
 	local lines = vim.fn.getline(1, "$")
 	for _, line in pairs(lines) do
 		local entry = parse_entry(line)
 		if entry ~= nil then
-			totals[entry.date] = (totals[entry.date] or 0) + entry.time
+			local key = key_fn(entry)
+			totals[key] = (totals[key] or 0) + entry.time
 		end
 	end
 	return totals
+end
+
+local function get_daily_totals()
+	return get_totals(function(entry)
+		return entry.date
+	end)
 end
 
 local function get_weekly_totals()
-	local totals = {}
-	local lines = vim.fn.getline(1, "$")
-	for _, line in pairs(lines) do
-		local entry = parse_entry(line)
-		if entry ~= nil then
-			local key = entry.year .. "-W" .. entry.week
-			totals[key] = (totals[key] or 0) + entry.time
-		end
-	end
-	return totals
+	return get_totals(function(entry)
+		return entry.year .. "-W" .. entry.week
+	end)
 end
 
 local function get_yearly_totals()
-	local totals = {}
-	local lines = vim.fn.getline(1, "$")
-	for _, line in pairs(lines) do
-		local entry = parse_entry(line)
-		if entry ~= nil then
-			local key = entry.year
-			totals[key] = (totals[key] or 0) + entry.time
-		end
-	end
-	return totals
+	return get_totals(function(entry)
+		return entry.year
+	end)
 end
 
 local function display_totals(totals)
